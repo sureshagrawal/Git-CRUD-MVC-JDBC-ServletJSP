@@ -58,6 +58,7 @@ public class StudentServlet extends HttpServlet {
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("student",new Student());
         request.getRequestDispatcher("student-form.jsp").forward(request, response);
     }
 

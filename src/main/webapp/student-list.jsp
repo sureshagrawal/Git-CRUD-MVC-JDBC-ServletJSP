@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List, java.util.ArrayList" %>
 <%@ page import="com.nsgacademy.crudmvc.model.Student" %>
+
+<jsp:useBean id="listStudents" type="java.util.List" scope="request" />
 
 <!doctype html>
 <html lang="en">
@@ -39,11 +40,19 @@
                 </tr>
             </thead>
             <tbody>
+
+                <%--
+                    List<Student> listStudents = (List<Student>) request.getAttribute("listStudents");
+                    OR
+                    <jsp:useBean id="listStudents" type="java.util.List" scope="request" />
+                    We should declare the bean before using it in scriptlet or JSTL code
+                --%>
+
                 <%
                 int cnt = 1;
-                ArrayList<Student> std = (ArrayList<Student>) request.getAttribute("listStudents");
-                if (std != null) {
-                    for (Student s : std) {
+
+                if (listStudents != null) {
+                    for (Student s : (List<Student>)listStudents) {
                 %>
                     <tr>
                         <th scope="row"><%= cnt++ %></th>
