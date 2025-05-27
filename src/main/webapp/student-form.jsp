@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="com.nsgacademy.crudmvc.model.Student" %>
-<jsp:useBean id="student" class="com.nsgacademy.crudmvc.model.Student" scope="request" />
 
 <!doctype html>
 <html lang="en">
@@ -21,38 +20,20 @@
         <h1 class="text-center">MVC CRUD APPLICATION</h1>
         <h3 class="text-center">Using JSP AND Servlet</h3>
 
-
-        <%--
-                <%
-                    Student student = (Student) request.getAttribute("student");
-                    if (student != null && student.getId() != 0) {
-                %>
-                <form action="update" method="post">
-                    <h2>Edit Student</h2>
-                    <input type="hidden" name="id" value="<%= student.getId() %>" />
-                <% } else { %>
-                <form action="insert" method="post">
-                    <h2>Add New Student</h2>
-                <% } %>
-        --%>
-
-
-
-        <%--
+        <%
             Student student = (Student) request.getAttribute("student");
-            OR
-            <jsp:useBean id="student" class="com.nsgacademy.crudmvc.model.Student" scope="request" />
-            We should declare the bean before using it in scriptlet or JSTL code
-        --%>
-
+            boolean isEdit = student != null;
+        %>
+        <h2><%= isEdit ? "Edit Student" : "Add New Student" %></h2>
 
         <%
-
-            boolean isEdit = student != null && student.getId() != 0;
+            String error = request.getParameter("error");
+            if (error != null) {
         %>
-        <form action="<%= isEdit ? "update" : "insert" %>" method="post">
-            <h2><%= isEdit ? "Edit Student" : "Add New Student" %></h2>
+        	<div class="alert alert-danger"><%= error %></div>
+    	<% } %>
 
+        <form action="<%= isEdit ? "update" : "insert" %>" method="post">
             <% if (isEdit) { %>
                 <input type="hidden" name="id" value="<%= student.getId() %>" />
             <% } %>
@@ -61,19 +42,19 @@
             <div class="mb-3">
                 <label class="form-label">Name</label>
                 <input type="text" class="form-control" placeholder="Enter your name" name="name"
-                    value="<%= (student.getName() != null) ? student.getName() : "" %>" id="stnameid" required>
+                    value="<%= (student != null) ? student.getName() : "" %>" id="stnameid" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Email</label>
                 <input type="text" class="form-control" placeholder="Enter your Email" name="email"
-                    value="<%= (student.getEmail() != null) ? student.getEmail() : "" %>" id="stemailid" required>
+                    value="<%= (student != null) ? student.getEmail() : "" %>" id="stemailid" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Mobile</label>
                 <input type="text" class="form-control" placeholder="Enter your Mobile" name="mobile"
-                    value="<%= (student.getMobile() != null) ? student.getMobile() : "" %>" id="stmobileid" required>
+                    value="<%= (student != null) ? student.getMobile() : "" %>" id="stmobileid" required>
             </div>
 
             <button type="submit" class="btn btn-primary" name="submit">Submit</button>

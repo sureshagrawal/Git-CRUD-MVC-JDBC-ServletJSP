@@ -2,6 +2,7 @@ package com.nsgacademy.crudmvc.dao;
 
 import com.nsgacademy.crudmvc.model.Student;
 import com.nsgacademy.crudmvc.utils.JDBCUtils;
+import com.nsgacademy.crudmvc.exception.DAOException;
 
 import java.sql.*;
 import java.util.*;

@@ -58,7 +58,6 @@ public class StudentServlet extends HttpServlet {
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("student",new Student());
         request.getRequestDispatcher("student-form.jsp").forward(request, response);
     }
 
@@ -76,7 +75,7 @@ public class StudentServlet extends HttpServlet {
 
         if (validateStudent(name, email, mobile)) {
             studentDAO.insertStudent(new Student(name, email, mobile));
-            response.sendRedirect("list");
+            response.sendRedirect("list?success=Added Successfully");
         } else {
             response.sendRedirect("new?error=Validation Failed");
         }
@@ -90,7 +89,7 @@ public class StudentServlet extends HttpServlet {
 
         if (validateStudent(name, email, mobile)) {
             studentDAO.updateStudent(new Student(id, name, email, mobile));
-            response.sendRedirect("list");
+            response.sendRedirect("list?success=Updated Successfully");
         } else {
             response.sendRedirect("edit?id=" + id + "&error=Validation Failed");
         }
@@ -99,7 +98,7 @@ public class StudentServlet extends HttpServlet {
     private void deleteStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
         int id = Integer.parseInt(request.getParameter("id"));
         studentDAO.deleteStudent(id);
-        response.sendRedirect("list");
+        response.sendRedirect("list?success=Deleted Successfully");
     }
 
     private boolean validateStudent(String name, String email, String mobile) {
