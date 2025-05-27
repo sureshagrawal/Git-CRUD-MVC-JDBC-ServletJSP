@@ -1,6 +1,7 @@
 package com.nsgacademy.crudmvc.web;
 
 import com.nsgacademy.crudmvc.dao.StudentDAO;
+import com.nsgacademy.crudmvc.exception.DAOException;
 import com.nsgacademy.crudmvc.model.Student;
 
 import jakarta.servlet.ServletException;
@@ -10,16 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
-
-
-/**
- * Controller
- * This StudentServlet acts as a page controller for the application, handling all
- * requests from the user.
- */
-
 
 @WebServlet("/")
 public class StudentServlet extends HttpServlet {
@@ -44,14 +36,14 @@ public class StudentServlet extends HttpServlet {
                 case "/update": updateStudent(request, response); break;
                 default: listStudents(request, response); break;
             }
-        } catch (Exception ex) {
+        } catch (DAOException ex) {
             ex.printStackTrace();
             request.setAttribute("errorMessage", ex.getMessage());
             request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 
-    private void listStudents(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+    private void listStudents(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
         List<Student> students = studentDAO.selectAllStudents();
         request.setAttribute("listStudents", students);
         request.getRequestDispatcher("student-list.jsp").forward(request, response);
@@ -61,14 +53,14 @@ public class StudentServlet extends HttpServlet {
         request.getRequestDispatcher("student-form.jsp").forward(request, response);
     }
 
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Student existingStudent = studentDAO.selectStudent(id);
         request.setAttribute("student", existingStudent);
         request.getRequestDispatcher("student-form.jsp").forward(request, response);
     }
 
-    private void insertStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+    private void insertStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, DAOException {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String mobile = request.getParameter("mobile");
@@ -81,7 +73,7 @@ public class StudentServlet extends HttpServlet {
         }
     }
 
-    private void updateStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+    private void updateStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, DAOException {
         int id = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("name");
         String email = request.getParameter("email");
@@ -95,7 +87,7 @@ public class StudentServlet extends HttpServlet {
         }
     }
 
-    private void deleteStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+    private void deleteStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, DAOException {
         int id = Integer.parseInt(request.getParameter("id"));
         studentDAO.deleteStudent(id);
         response.sendRedirect("list?success=Deleted Successfully");
@@ -107,4 +99,3 @@ public class StudentServlet extends HttpServlet {
                 && mobile != null && mobile.matches("\\d{10}");
     }
 }
-

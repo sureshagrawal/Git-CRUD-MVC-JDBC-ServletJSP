@@ -1,8 +1,8 @@
 package com.nsgacademy.crudmvc.dao;
 
+import com.nsgacademy.crudmvc.exception.DAOException;
 import com.nsgacademy.crudmvc.model.Student;
 import com.nsgacademy.crudmvc.utils.JDBCUtils;
-import com.nsgacademy.crudmvc.exception.DAOException;
 
 import java.sql.*;
 import java.util.*;
@@ -14,17 +14,19 @@ public class StudentDAO {
     private static final String DELETE_SQL = "DELETE FROM student WHERE id=?";
     private static final String UPDATE_SQL = "UPDATE student SET name=?, email=?, mobile=? WHERE id=?";
 
-    public void insertStudent(Student student) throws SQLException {
+    public void insertStudent(Student student) throws DAOException {
         try (Connection conn = JDBCUtils.getConnection();
              PreparedStatement stmt = conn.prepareStatement(INSERT_SQL)) {
             stmt.setString(1, student.getName());
             stmt.setString(2, student.getEmail());
             stmt.setString(3, student.getMobile());
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Error inserting student", e);
         }
     }
 
-    public Student selectStudent(int id) throws SQLException {
+    public Student selectStudent(int id) throws DAOException {
         Student student = null;
         try (Connection conn = JDBCUtils.getConnection();
              PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL)) {
@@ -34,11 +36,13 @@ public class StudentDAO {
                     student = new Student(id, rs.getString("name"), rs.getString("email"), rs.getString("mobile"));
                 }
             }
+        } catch (SQLException e) {
+            throw new DAOException("Error selecting student by id", e);
         }
         return student;
     }
 
-    public List<Student> selectAllStudents() throws SQLException {
+    public List<Student> selectAllStudents() throws DAOException {
         List<Student> students = new ArrayList<>();
         try (Connection conn = JDBCUtils.getConnection();
              PreparedStatement stmt = conn.prepareStatement(SELECT_ALL_SQL);
@@ -50,19 +54,23 @@ public class StudentDAO {
                         rs.getString("email"),
                         rs.getString("mobile")));
             }
+        } catch (SQLException e) {
+            throw new DAOException("Error selecting all students", e);
         }
         return students;
     }
 
-    public boolean deleteStudent(int id) throws SQLException {
+    public boolean deleteStudent(int id) throws DAOException {
         try (Connection conn = JDBCUtils.getConnection();
              PreparedStatement stmt = conn.prepareStatement(DELETE_SQL)) {
             stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DAOException("Error deleting student", e);
         }
     }
 
-    public boolean updateStudent(Student student) throws SQLException {
+    public boolean updateStudent(Student student) throws DAOException {
         try (Connection conn = JDBCUtils.getConnection();
              PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
             stmt.setString(1, student.getName());
@@ -70,7 +78,8 @@ public class StudentDAO {
             stmt.setString(3, student.getMobile());
             stmt.setInt(4, student.getId());
             return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DAOException("Error updating student", e);
         }
     }
 }
-
