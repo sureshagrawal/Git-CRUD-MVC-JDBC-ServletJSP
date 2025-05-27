@@ -15,7 +15,6 @@
 </head>
 
 <body>
-
     <div class="container my-5">
         <h1 class="text-center">MVC CRUD APPLICATION</h1>
         <h3 class="text-center">Using JSP AND Servlet</h3>
@@ -27,7 +26,7 @@
         <h2><%= isEdit ? "Edit Student" : "Add New Student" %></h2>
 
         <%
-            String error = request.getParameter("error");
+            String error = (String) request.getAttribute("error");
             if (error != null) {
         %>
         	<div class="alert alert-danger"><%= error %></div>
@@ -38,23 +37,24 @@
                 <input type="hidden" name="id" value="<%= student.getId() %>" />
             <% } %>
 
-
             <div class="mb-3">
                 <label class="form-label">Name</label>
                 <input type="text" class="form-control" placeholder="Enter your name" name="name"
-                    value="<%= (student != null) ? student.getName() : "" %>" id="stnameid" required>
+                    value="<%= (student != null) ? student.getName() : "" %>" id="stnameid" required
+                    pattern="[A-Za-z\s]+" title="Name should contain only letters and spaces.">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Email</label>
-                <input type="text" class="form-control" placeholder="Enter your Email" name="email"
+                <input type="email" class="form-control" placeholder="Enter your Email" name="email"
                     value="<%= (student != null) ? student.getEmail() : "" %>" id="stemailid" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Mobile</label>
                 <input type="text" class="form-control" placeholder="Enter your Mobile" name="mobile"
-                    value="<%= (student != null) ? student.getMobile() : "" %>" id="stmobileid" required>
+                    value="<%= (student != null) ? student.getMobile() : "" %>" id="stmobileid" required
+                    pattern="\d{10}" title="Mobile number should be 10 digits.">
             </div>
 
             <button type="submit" class="btn btn-primary" name="submit">Submit</button>
