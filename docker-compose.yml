@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.1
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crud
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./crud.sql:/docker-entrypoint-initdb.d/crud.sql
+    networks:
+      - app-network
+
+  tomcat-app:
+    build: .
+    container_name: crud-container
+    ports:
+      - "8080:8080"
+    environment:
+      JDBC_HOST: mysql-db
+      JDBC_USERNAME: user
+      JDBC_PASSWORD: password
+    depends_on:
+      - mysql-db
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+
+networks:
+  app-network:
+    driver: bridge

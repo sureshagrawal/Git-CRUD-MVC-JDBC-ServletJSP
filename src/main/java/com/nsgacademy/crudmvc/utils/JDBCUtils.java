@@ -3,9 +3,11 @@ package com.nsgacademy.crudmvc.utils;
 import java.sql.*;
 
 public class JDBCUtils {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/crud";
-    private static final String JDBC_USERNAME = "root";
-    private static final String JDBC_PASSWORD = "";
+    // Use environment variable if available, otherwise fallback to localhost
+    private static final String JDBC_HOST = System.getenv("JDBC_HOST") != null ? System.getenv("JDBC_HOST") : "localhost";
+    private static final String JDBC_URL = "jdbc:mysql://" + JDBC_HOST + ":3306/crud";
+    private static final String JDBC_USERNAME = System.getenv("JDBC_USERNAME") != null ? System.getenv("JDBC_USERNAME") : "root";
+    private static final String JDBC_PASSWORD = System.getenv("JDBC_PASSWORD") != null ? System.getenv("JDBC_PASSWORD") : "";
 
     public static Connection getConnection() throws SQLException {
         try {
